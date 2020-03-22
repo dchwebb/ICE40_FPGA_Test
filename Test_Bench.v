@@ -16,7 +16,7 @@ module Test_Bench;
 	wire o_DAC_MOSI, o_DAC_SCK, o_DAC_CS;
 
 	top dut (
-		.i_Clock(clock),
+		//.i_Clock(clock),
 		.reset_n(reset_n),
 		.led(led),
 		.test(test),

@@ -1,6 +1,6 @@
 module top
 	(
-		input wire i_Clock,
+		//input wire i_Clock,
 		input wire reset_n,
 		output reg led,
 		output wire test,
@@ -36,8 +36,6 @@ module top
 	reg [23:0] DAC_Data;
 	wire DAC_Ready;
 	
-	wire i_dactest;
-
 	DAC_SPI_Out dac(
 		.i_Clock(Clock_48MHz),
 		.i_Reset(Reset),
@@ -47,12 +45,12 @@ module top
 		.o_SPI_Clock(o_DAC_SCK),
 		.o_SPI_Data(o_DAC_MOSI),
 		.o_Ready(DAC_Ready),
-		.testdac(i_dactest)
+		.testdac(test)
 	);
 
 
-	reg [11:0] counter = 1'b0;
-	reg [23:0] outcount = 1'b0;
+	reg [8:0] counter = 1'b0;
+	reg [15:0] outcount = 1'b0;
 	//reg [7:0] Reset_Counter;
 
 	//always @(posedge Clock_48MHz) begin
@@ -81,12 +79,10 @@ module top
 
 			counter <= counter + 1'b1;
 
-			if (test && outcount == 0)
-				outcount <= counter;
 
-			if (counter == 1000 && DAC_Ready) begin
-				//outcount <= outcount + 1'b1;
-				DAC_Data <= outcount;
+			if (counter == 100 && DAC_Ready) begin
+				outcount <= outcount + 16'd50;
+				DAC_Data <= {8'h31, outcount};
 				DAC_Send <= 1'b1;
 			end
 			else begin
